@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAccount } from "wagmi";
 import { Polybase } from "@polybase/client";
 import { Navigate } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 // import { createCollection } from "../../lib/polybase";
 
 export default function AddNewCustomerPage() {
@@ -19,6 +20,8 @@ export default function AddNewCustomerPage() {
 	const [bank, setBank] = useState("");
 	const [redirect, setRedirect] = useState(false);
 
+	const unique_id = uuid();
+
 	const db = new Polybase({ defaultNamespace: "customers" });
 	const collectionReference = db.collection("Customer");
 
@@ -34,7 +37,7 @@ export default function AddNewCustomerPage() {
 		}
 
 		const recordData = await collectionReference.create([
-			walletAddress,
+			unique_id,
 			custName,
 			dob,
 			gender,
