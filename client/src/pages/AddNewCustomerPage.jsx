@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useAccount } from "wagmi";
-import { Polybase } from "@polybase/client";
-import { Navigate } from "react-router-dom";
-import { v4 as uuid } from "uuid";
-// import { createCollection } from "../../lib/polybase";
+// import { useAccount } from "wagmi";
+// import { Polybase } from "@polybase/client";
+// import { v4 as uuid } from "uuid";
+// import uploadFinger from "../../lib/web3storage";
+import axios from "axios";
 
+// import { createCollection } from "../../lib/polybase";
 export default function AddNewCustomerPage() {
-	const { isConnected, address: walletAddress } = useAccount();
+	// const { isConnected } = useAccount();
 
 	const [custName, setCustName] = useState("");
 	const [dob, setDob] = useState(new Date());
@@ -14,47 +15,79 @@ export default function AddNewCustomerPage() {
 	const [address, setAddress] = useState("");
 	const [contact, setContact] = useState("");
 	const [email, setEmail] = useState("");
+	const [fingerprint, setFingerPrint] = useState([]);
 	const [holderName, setHolderName] = useState("");
 	const [accNumber, setAccNumber] = useState("");
 	const [branch, setBranch] = useState("");
 	const [bank, setBank] = useState("");
-	const [redirect, setRedirect] = useState(false);
 
-	const unique_id = uuid();
+	// const unique_id = uuid();
 
-	const db = new Polybase({ defaultNamespace: "customers" });
-	const collectionReference = db.collection("Customer");
+	// const db = new Polybase({ defaultNamespace: "customers" });
+	// const collectionReference = db.collection("Customer");
 
 	function inputLabel(title) {
 		return <label className="text-gray-500 font-semibold">{title}</label>;
 	}
 
-	async function handleSubmit(ev) {
+	async function handleUpload(ev) {
 		ev.preventDefault();
-		if (!isConnected) {
-			alert("Connect Your Wallet first!");
-			return;
+		const fingerData = [];
+		fingerData.push(ev.target.files[0].name);
+		setFingerPrint(fingerData);
+		setFingerPrint(ev.target.files[0].name);
+		const data = new FormData();
+		const files = ev.target.files;
+		for (let i = 0; i < files.length; i++) {
+			data.append("photos", files[i]);
 		}
-
-		const recordData = await collectionReference.create([
-			unique_id,
-			custName,
-			dob,
-			gender,
-			address,
-			contact,
-			email,
-			holderName,
-			accNumber,
-			branch,
-			bank,
-		]);
-		console.log(recordData);
-		setRedirect(true);
+		axios.post("/upload", data, {
+			headers: { "Content-Type": "multipart/form-data" },
+		});
+		// await uploadFinger()
 	}
 
-	if (redirect) {
-		return <Navigate to={"/view-customers"} />;
+	async function handleSubmit(ev) {
+		ev.preventDefault();
+		// if (!isConnected) {
+		// 	alert("Connect Your Wallet first!");
+		// 	return;
+		// }
+
+		// const recordData = await collectionReference.create([
+		// 	unique_id,
+		// 	custName,
+		// 	dob,
+		// 	gender,
+		// 	address,
+		// 	contact,
+		// 	email,
+		// 	holderName,
+		// 	accNumber,
+		// 	branch,
+		// 	bank,
+		// ]);
+		// console.log(recordData);
+
+		try {
+			await axios.post("/register", {
+				custName,
+				dob,
+				gender,
+				address,
+				contact,
+				email,
+				holderName,
+				accNumber,
+				branch,
+				bank,
+				fingerprint,
+			});
+			alert("Data Uploaded Successfully");
+		} catch (e) {
+			console.log(e);
+			alert("Something went wrong");
+		}
 	}
 
 	return (
@@ -62,7 +95,7 @@ export default function AddNewCustomerPage() {
 			<h1 className="text-5xl text-center my-10 text-blue-700">
 				Add New Customer
 			</h1>
-			<form className="max-w-4xl my-5 mx-auto" onSubmit={handleSubmit}>
+			<form className="max-w-4xl my-5 mx-auto">
 				<h4 className="-ml-10 text-blue-500 mb-5 text-xl border-b-2 border-blue-500">
 					Customer Personal Details
 				</h4>
@@ -180,8 +213,36 @@ export default function AddNewCustomerPage() {
 						required
 					/>
 				</div>
+				<div className="relative text-center mt-3">
+					<input
+						type="file"
+						className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+						onChange={handleUpload}
+					/>
+					<div className="p-4 bg-gray-100 border border-gray-300 rounded-md">
+						<svg
+							className="w-6 h-6 mx-auto mb-2 text-gray-400"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+							></path>
+						</svg>
+						<span className="text-sm text-gray-600">
+							Select Fingerprint
+						</span>
+					</div>
+				</div>
 				<div>
-					<button className="primary">Submit</button>
+					<button className="primary" onClick={handleSubmit}>
+						Submit
+					</button>
 				</div>
 			</form>
 		</div>
