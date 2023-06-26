@@ -37,6 +37,7 @@ app.post("/register", async (req, res) => {
 	} = req.body;
 
 	try {
+		console.log("Fingerprint index", fingerprint);
 		const UserDoc = await User.create({
 			cust_name: custName,
 			gender: gender,
@@ -70,7 +71,9 @@ app.post("/upload", photosMiddleWare.array("photos", 100), async (req, res) => {
 	res.json(uploadedFiles);
 });
 
-app.get("/customers", async (req, res) => {});
+app.get("/customers", async (req, res) => {
+	res.json(await User.find());
+});
 
 const port = 3000;
 app.listen(port, () => {

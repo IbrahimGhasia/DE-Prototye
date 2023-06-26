@@ -32,6 +32,7 @@ export default function AddNewCustomerPage() {
 
 	async function handleUpload(ev) {
 		ev.preventDefault();
+		console.log(ev.target.files);
 		const fingerData = [];
 		fingerData.push(ev.target.files[0].name);
 		setFingerPrint(fingerData);
@@ -46,6 +47,27 @@ export default function AddNewCustomerPage() {
 		});
 		// await uploadFinger()
 	}
+
+	// function handleUpload(ev) {
+	// 	ev.preventDefault();
+	// 	const files = ev.target.files;
+	// 	const data = new FormData();
+	// 	for (let i = 0; i < files.length; i++) {
+	// 		data.append("photos", files[i]);
+	// 	}
+	// 	axios
+	// 		.post("/upload", data, {
+	// 			headers: { "Content-Type": "multipart/form-data" },
+	// 		})
+	// 		.then((response) => {
+	// 			const { data: filenames } = response;
+	// 			setFingerPrint(filenames);
+	// 		});
+
+	// 	console.log({ files });
+	// }
+
+	// console.log("Fingerprint", fingerprint);
 
 	async function handleSubmit(ev) {
 		ev.preventDefault();

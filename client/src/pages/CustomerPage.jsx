@@ -2,6 +2,7 @@
 import { useState } from "react";
 // import { Polybase } from "@polybase/client";
 import CustomerCard from "../components/CustomerCard";
+import axios from "axios";
 
 export default function CustomerPage() {
 	const [cust, setCust] = useState([]);
@@ -29,12 +30,18 @@ export default function CustomerPage() {
 	// 	getCustomers();
 	// }, []);
 
+	console.log(cust);
+
+	axios.get("/customers").then((response) => {
+		setCust(response.data);
+	});
+
 	return (
 		<div className="grid md:grid-cols-3 gap-5 mx-10">
 			{cust.length > 0 &&
-				cust.map((cust) => (
+				cust.map((cust, id) => (
 					<div>
-						<CustomerCard key={cust.data.id} props={cust.data} />
+						<CustomerCard key={id} props={cust} />
 					</div>
 				))}
 		</div>
