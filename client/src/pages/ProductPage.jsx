@@ -15,6 +15,17 @@ export default function ProductPage() {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
+	function calculateTotalPrice(selectedProducts) {
+		let totalPrice = 0;
+
+		for (const product of selectedProducts) {
+			const { price, quantity } = product;
+			totalPrice += price * quantity;
+		}
+
+		return totalPrice;
+	}
+
 	function handleSubmit(ev) {
 		ev.preventDefault();
 		const newProduct = {
@@ -102,7 +113,9 @@ export default function ProductPage() {
 								<hr />
 								<div className="flex justify-between mt-4">
 									<p className="text-2xl ml-9">Total</p>
-									<p>Rs. {getRandomInt(130, 2000)}</p>
+									<p>
+										Rs. {calculateTotalPrice(addedProduct)}
+									</p>
 								</div>
 								<button className="primary">
 									Proceed to CheckOut

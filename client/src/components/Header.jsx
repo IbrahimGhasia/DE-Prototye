@@ -6,12 +6,14 @@ export default function Header() {
 	return (
 		<div className="flex items-center p-8 justify-between border-b-2 border-blue-700">
 			<div>
-				<h1 className="text-5xl font-semibold text-blue-700 cursor-pointer">
-					<span className="flex items-center gap-2">
-						<IconFingerprint size={48} />
-						BioTrust
-					</span>
-				</h1>
+				<Link to={"/"}>
+					<h1 className="text-5xl font-semibold text-blue-700 cursor-pointer">
+						<span className="flex items-center gap-2">
+							<IconFingerprint size={48} />
+							BioTrust
+						</span>
+					</h1>
+				</Link>
 			</div>
 			<div className="">
 				<ul className="flex gap-10 items-center text-md text-gray-500 ">

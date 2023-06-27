@@ -52,7 +52,6 @@ export default function CustomerCard({ props }) {
 						Bank name: {props.acc_Bank} <br />
 						Branch name: {props.acc_Branch} <br />
 					</p>
-					<img src={props.fingerprint[0]} />
 				</div>
 			</div>
 		</div>
